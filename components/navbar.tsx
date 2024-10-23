@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import ModeToggle from "./theme-controller";
-import { Button } from "./ui/button";
 import MobileNav from "./mobile-nav";
+import ModeToggle from "./theme-controller";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const navLinks = [
   {
@@ -43,22 +43,48 @@ export default function Navbar() {
 
         {/* Right Side: Nav Links and Theme Toggle */}
         <div className="hidden md:flex items-center space-x-6">
-          {navLinks.map((link) => (
-            <Link key={link.name} href={link.href}>
-              <Button
-                variant="ghost"
+          <SignedIn>
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
                 className={cn(
                   "tracking-wider text-gray-900 dark:text-white",
-                  pathname === link.href ? "font-bold" : ""
+                  pathname === link.href ? "font-bold border-b-2" : ""
                 )}
               >
                 {link.name}
-              </Button>
-            </Link>
-          ))}
+              </Link>
+            ))}
 
-          {/* Theme Toggle */}
-          <ModeToggle />
+            {/* Theme Toggle */}
+            <ModeToggle />
+            <UserButton />
+          </SignedIn>
+
+          <SignedOut>
+            <Link
+              href="/sign-in"
+              className={cn(
+                "tracking-wider text-gray-900 dark:text-white",
+                pathname === "/sign-in" ? "font-bold border-b-2" : ""
+              )}
+            >
+              Login
+            </Link>
+            <Link
+              href="/sign-up"
+              className={cn(
+                "tracking-wider text-gray-900 dark:text-white",
+                pathname === "/sign-in" ? "font-bold border-b-2" : ""
+              )}
+            >
+              Sign Up
+            </Link>
+
+            {/* Theme Toggle */}
+            <ModeToggle />
+          </SignedOut>
         </div>
         <MobileNav navLinks={navLinks} />
       </div>

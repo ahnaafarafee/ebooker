@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
+import NavbarWrapper from "@/components/navbar-wrapper";
 
 export const metadata: Metadata = {
   title: "Ebooker",
@@ -17,18 +19,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn("min-h-screen", poppins.className)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Navbar />
-          <div className="mx-auto container px-4 md:px-8">{children}</div>
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={cn("min-h-screen", poppins.className)}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NavbarWrapper />
+            <div className="mx-auto container px-4 md:px-8">{children}</div>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

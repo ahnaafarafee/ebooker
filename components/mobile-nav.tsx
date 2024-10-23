@@ -4,6 +4,7 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ModeToggle from "./theme-controller";
+import { SignedIn, SignedOut, SignOutButton, UserButton } from "@clerk/nextjs";
 
 const MobileNav = ({
   navLinks,
@@ -19,19 +20,47 @@ const MobileNav = ({
         </SheetTrigger>
         <SheetContent>
           <div className="flex flex-col gap-4 mt-8">
-            {navLinks.map((link) => (
-              <div key={link.name}>
-                <Link
-                  href={link.href}
-                  className={cn(
-                    "text-2xl pl-4",
-                    pathname === link.href ? "border-l-4" : ""
-                  )}
-                >
-                  {link.name}
-                </Link>
+            <SignedIn>
+              {navLinks.map((link) => (
+                <div key={link.name}>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "text-2xl pl-4",
+                      pathname === link.href ? "border-l-4" : ""
+                    )}
+                  >
+                    {link.name}
+                  </Link>
+                </div>
+              ))}
+              <Link href="/user-profile" className="text-2xl pl-4">
+                My Account
+              </Link>
+              <div className="pl-4 text-2xl">
+                <SignOutButton />
               </div>
-            ))}
+            </SignedIn>
+            <SignedOut>
+              <Link
+                href="/sign-in"
+                className={cn(
+                  "tracking-wider text-gray-900 dark:text-white",
+                  pathname === "/sign-in" ? "font-bold border-b-2" : ""
+                )}
+              >
+                Login
+              </Link>
+              <Link
+                href="/sign-up"
+                className={cn(
+                  "tracking-wider text-gray-900 dark:text-white",
+                  pathname === "/sign-in" ? "font-bold border-b-2" : ""
+                )}
+              >
+                Sign Up
+              </Link>
+            </SignedOut>
             <div className="flex items-center justify-center">
               <ModeToggle />
             </div>
