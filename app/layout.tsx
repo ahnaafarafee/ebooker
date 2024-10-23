@@ -6,6 +6,7 @@ import "./globals.css";
 import ClientClerkProvider from "@/components/client-clerk-provider";
 import NavbarWrapper from "@/components/navbar-wrapper";
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Ebooker",
