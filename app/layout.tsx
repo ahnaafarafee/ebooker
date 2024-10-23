@@ -1,12 +1,11 @@
-import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { poppins } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
-import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
+import ClientClerkProvider from "@/components/client-clerk-provider";
 import NavbarWrapper from "@/components/navbar-wrapper";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Ebooker",
@@ -19,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClientClerkProvider>
       <html lang="en">
         <body className={cn("min-h-screen", poppins.className)}>
           <ThemeProvider
@@ -33,6 +32,6 @@ export default function RootLayout({
           </ThemeProvider>
         </body>
       </html>
-    </ClerkProvider>
+    </ClientClerkProvider>
   );
 }
