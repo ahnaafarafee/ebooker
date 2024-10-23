@@ -7,7 +7,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MobileNav from "./mobile-nav";
 import ModeToggle from "./theme-controller";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { ClerkLoading, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import Spinner from "./spinner";
 
 const navLinks = [
   {
@@ -41,6 +42,11 @@ export default function Navbar() {
           </Link>
         </div>
 
+        <div className="hidden md:block ml-auto">
+          <ClerkLoading>
+            <Spinner />
+          </ClerkLoading>
+        </div>
         {/* Right Side: Nav Links and Theme Toggle */}
         <div className="hidden md:flex items-center space-x-6">
           <SignedIn>
