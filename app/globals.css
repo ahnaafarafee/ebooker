@@ -12,6 +12,17 @@ body {
   }
 }
 
+@media (prefers-color-scheme: dark) {
+  .EasyMDEContainer {
+    background-color: #020817;
+  }
+
+  .CodeMirror {
+    background-color: #020817 !important;
+    color: white !important;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

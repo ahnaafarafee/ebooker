@@ -7,6 +7,7 @@ import ClientClerkProvider from "@/components/client-clerk-provider";
 import NavbarWrapper from "@/components/navbar-wrapper";
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Ebooker",
@@ -30,6 +31,7 @@ export default function RootLayout({
           >
             <NavbarWrapper />
             <div className="mx-auto container px-4 md:px-8">{children}</div>
+            <Toaster />;
           </ThemeProvider>
         </body>
       </html>

@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,21 +25,27 @@ import {
 } from "@/components/ui/select";
 import { formSchema } from "@/lib/formSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Coins } from "lucide-react";
+import { Coins, Info } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import axios from "axios";
+import { useState } from "react";
+import PreviewGeneratedText from "./preview-generated-text";
 import Spinner from "./spinner";
 import { Input } from "./ui/input";
+import { useToast } from "@/hooks/use-toast";
 
 const CreateEbookForm = () => {
+  const [generatedText, setGeneratedText] = useState<string>("");
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: "",
       title: "",
-      wordCount: "", // Ensure these fields are in the default values
+      wordCount: "",
       age: "",
       theme: "",
     },
@@ -42,9 +55,21 @@ const CreateEbookForm = () => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    let coins = 0;
+    if (values.wordCount === "200") {
+      coins = 2;
+    } else if (values.wordCount === "500") {
+      coins = 5;
+    } else if (values.wordCount === "1000") {
+      coins = 10;
+    }
     try {
       const response = await axios.post("/api/ai/text", values);
-      console.log(response.data.text);
+      setGeneratedText(response.data.text);
+      toast({
+        title: "Text Generated Successfully!",
+        description: `${coins} coins have been deducted from your account`,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -75,6 +100,23 @@ const CreateEbookForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Word Count</FormLabel>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="h-3 w-3 text-yellow-600 dark:text-yellow-400" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="!text-xs !max-w-40 md:!max-w-lg">
+                        The word count provided is an estimate and may not be
+                        exactly accurate. While we aim to generate content close
+                        to the specified number, the final result might vary
+                        slightly due to the natural flow and structure of the
+                        text.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -86,7 +128,7 @@ const CreateEbookForm = () => {
                     <SelectItem value="200">
                       <div className="flex gap-4">
                         <span>200 words</span>
-                        <span className="text-yellow-400 flex items-center ml-2 gap-1">
+                        <span className="text-yellow-600 dark:text-yellow-400 flex items-center ml-2 gap-1">
                           2 <Coins className="h-4 w-4" />
                         </span>
                       </div>
@@ -94,7 +136,7 @@ const CreateEbookForm = () => {
                     <SelectItem value="500">
                       <div className="flex  gap-4">
                         <span>500 words</span>
-                        <span className="text-yellow-400 flex items-center ml-2 gap-1">
+                        <span className="text-yellow-600 dark:text-yellow-400 flex items-center ml-2 gap-1">
                           5 <Coins className="h-4 w-4" />
                         </span>
                       </div>
@@ -102,7 +144,7 @@ const CreateEbookForm = () => {
                     <SelectItem value="1000">
                       <div className="flex  gap-4">
                         <span>1000 words</span>
-                        <span className="text-yellow-400 flex items-center ml-2 gap-1">
+                        <span className="text-yellow-600 dark:text-yellow-400 flex items-center ml-2 gap-1">
                           10 <Coins className="h-4 w-4" />
                         </span>
                       </div>
@@ -183,6 +225,8 @@ const CreateEbookForm = () => {
           )}
         </Button>
       </form>
+      {/* Preview Generated Text Component */}
+      <PreviewGeneratedText text={generatedText} />
     </Form>
   );
 };
