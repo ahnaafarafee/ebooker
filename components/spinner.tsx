@@ -1,12 +1,16 @@
 import { RotatingLines } from "react-loader-spinner";
 
-const Spinner = () => {
+interface Props {
+  color?: string;
+}
+
+const Spinner = ({ color }: Props) => {
   return (
     <RotatingLines
       visible={true}
       width="25"
       strokeWidth="2"
-      strokeColor="black"
+      strokeColor={color ? color : "black"}
       animationDuration="0.75"
       ariaLabel="rotating-lines-loading"
     />
