@@ -1,20 +1,27 @@
 import "easymde/dist/easymde.min.css";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Markdown from "react-markdown";
 import SimpleMDE from "react-simplemde-editor";
 import { Button } from "./ui/button";
 import { Info } from "lucide-react";
+import { textSchema } from "@/lib/textSchema";
+import { z } from "zod";
+import axios from "axios";
+import Spinner from "./spinner";
 
 interface PreviewGeneratedTextProps {
   text: string;
+  title: string;
 }
 
 const PreviewGeneratedText: React.FC<PreviewGeneratedTextProps> = ({
   text,
+  title,
 }) => {
   const previewRef = useRef<HTMLDivElement>(null);
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm<z.infer<typeof textSchema>>();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (text && previewRef.current) {
@@ -23,13 +30,21 @@ const PreviewGeneratedText: React.FC<PreviewGeneratedTextProps> = ({
     }
   }, [text]);
 
+  async function onSubmit(values: z.infer<typeof textSchema>) {
+    try {
+      setIsLoading(true);
+      await axios.post("/api/books", { ...values, title });
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  }
+
   return (
     <>
-      {!text ? (
-        <div
-          ref={previewRef}
-          className="mt-8 p-4 !leading-6  rounded-lg border-dotted border-2"
-        >
+      {text ? (
+        <div className="mt-8 p-4 !leading-6  rounded-lg border-dotted border-2">
           <div>
             <h2 className="text-lg font-semibold mb-4">Preview</h2>
             <div className="mb-4 flex gap-2">
@@ -40,18 +55,32 @@ const PreviewGeneratedText: React.FC<PreviewGeneratedTextProps> = ({
                 made.
               </span>
             </div>
-            <form className="prose">
+            <form className="prose" onSubmit={handleSubmit(onSubmit)}>
               <Controller
-                name="description"
+                name="text"
                 defaultValue={text}
                 control={control}
                 render={({ field }) => (
                   <SimpleMDE placeholder="Description" {...field} />
                 )}
               />
-              <Button className="w-full mt-4" type="submit">
-                Save and Publish
-              </Button>
+              <div ref={previewRef}>
+                <Button
+                  disabled={isLoading}
+                  type="submit"
+                  variant={isLoading ? "ghost" : "default"}
+                  className="w-full !rounded-full"
+                >
+                  {isLoading ? (
+                    <div className="flex gap-2 justify-center items-center">
+                      <span>saving</span>
+                      <Spinner />
+                    </div>
+                  ) : (
+                    "Save and Publish"
+                  )}
+                </Button>
+              </div>
             </form>
           </div>
         </div>

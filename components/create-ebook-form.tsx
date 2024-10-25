@@ -38,6 +38,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const CreateEbookForm = () => {
   const [generatedText, setGeneratedText] = useState<string>("");
+  const [bookTitle, setBookTitle] = useState<string>("");
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -54,7 +55,6 @@ const CreateEbookForm = () => {
   const isSubmitting = form.formState.isSubmitting;
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     let coins = 0;
     if (values.wordCount === "200") {
       coins = 2;
@@ -66,6 +66,7 @@ const CreateEbookForm = () => {
     try {
       const response = await axios.post("/api/ai/text", values);
       setGeneratedText(response.data.text);
+      setBookTitle(values.title);
       toast({
         title: "Text Generated Successfully!",
         description: `${coins} coins have been deducted from your account`,
@@ -226,7 +227,7 @@ const CreateEbookForm = () => {
         </Button>
       </form>
       {/* Preview Generated Text Component */}
-      <PreviewGeneratedText text={generatedText} />
+      <PreviewGeneratedText text={generatedText} title={bookTitle} />
     </Form>
   );
 };

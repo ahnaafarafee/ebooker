@@ -20,4 +20,17 @@ model User {
   imageUrl  String?
   firstName String?
   lastName  String?
+  username  String?
+  credits   Int     @default(10)
+  books     Book[]  @relation("UserBooks")
+}
+
+model Book {
+  id       String @id @default(cuid())
+  title    String
+  text     String @db.Text
+  authorId String
+  author   User   @relation("UserBooks", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([authorId]) // Optional index for faster queries
 }
