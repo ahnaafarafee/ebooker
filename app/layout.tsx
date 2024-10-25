@@ -31,7 +31,7 @@ export default function RootLayout({
           >
             <NavbarWrapper />
             <div className="mx-auto container px-4 md:px-8">{children}</div>
-            <Toaster />;
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
