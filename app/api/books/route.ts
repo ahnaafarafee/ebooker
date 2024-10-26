@@ -1,10 +1,10 @@
 import { textSchema } from "@/lib/textSchema";
 import prisma from "@/prisma/client";
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-  const { userId } = await auth();
+  const { userId } = getAuth(request);
 
   if (!userId) {
     return NextResponse.json("Unauthorized", { status: 401 });
@@ -42,7 +42,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { userId } = auth();
+  const { userId } = getAuth(request);
 
   if (!userId) {
     return NextResponse.json("Unauthorized", { status: 401 });

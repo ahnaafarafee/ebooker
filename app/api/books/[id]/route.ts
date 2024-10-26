@@ -1,5 +1,5 @@
 import prisma from "@/prisma/client";
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function DELETE(
@@ -7,7 +7,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { userId } = await auth();
+    const { userId } = getAuth(request);
 
     if (!userId) {
       return NextResponse.json("Unauthorized", { status: 401 });
