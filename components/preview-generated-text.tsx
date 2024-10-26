@@ -1,3 +1,5 @@
+"use client";
+
 import "easymde/dist/easymde.min.css";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -9,6 +11,7 @@ import { textSchema } from "@/lib/textSchema";
 import { z } from "zod";
 import axios from "axios";
 import Spinner from "./spinner";
+import { useRouter } from "next/navigation";
 
 interface PreviewGeneratedTextProps {
   text: string;
@@ -23,6 +26,8 @@ const PreviewGeneratedText: React.FC<PreviewGeneratedTextProps> = ({
   const { control, handleSubmit } = useForm<z.infer<typeof textSchema>>();
   const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
+
   useEffect(() => {
     if (text && previewRef.current) {
       // Scroll to the preview section when text is generated
@@ -33,7 +38,8 @@ const PreviewGeneratedText: React.FC<PreviewGeneratedTextProps> = ({
   async function onSubmit(values: z.infer<typeof textSchema>) {
     try {
       setIsLoading(true);
-      await axios.post("/api/books", { ...values, title });
+      const response = await axios.post("/api/books", { ...values, title });
+      router.push(`/dashboard/${response.data.id}`);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -44,7 +50,10 @@ const PreviewGeneratedText: React.FC<PreviewGeneratedTextProps> = ({
   return (
     <>
       {text ? (
-        <div className="mt-8 p-4 !leading-6  rounded-lg border-dotted border-2">
+        <div
+          className="mt-8 p-4 !leading-6  rounded-lg border-dotted border-2"
+          ref={previewRef}
+        >
           <div>
             <h2 className="text-lg font-semibold mb-4">Preview</h2>
             <div className="mb-4 flex gap-2">
@@ -64,7 +73,7 @@ const PreviewGeneratedText: React.FC<PreviewGeneratedTextProps> = ({
                   <SimpleMDE placeholder="Description" {...field} />
                 )}
               />
-              <div ref={previewRef}>
+              <div>
                 <Button
                   disabled={isLoading}
                   type="submit"
