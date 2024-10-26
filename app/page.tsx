@@ -1,6 +1,7 @@
 import BookList from "@/components/book-list";
 import prisma from "@/prisma/client";
 import Link from "next/link";
+export const dynamic = "force-dynamic";
 
 const MyBooksPage = async () => {
   const response = await prisma.book.findMany({
