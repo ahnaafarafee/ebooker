@@ -1,3 +1,5 @@
+"use client";
+
 import { Book, User } from "@prisma/client";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
