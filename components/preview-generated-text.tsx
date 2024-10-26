@@ -1,17 +1,21 @@
 "use client";
 
+import { textSchema } from "@/lib/textSchema";
+import axios from "axios";
 import "easymde/dist/easymde.min.css";
+import { Info } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Markdown from "react-markdown";
-import SimpleMDE from "react-simplemde-editor";
-import { Button } from "./ui/button";
-import { Info } from "lucide-react";
-import { textSchema } from "@/lib/textSchema";
 import { z } from "zod";
-import axios from "axios";
 import Spinner from "./spinner";
-import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
+
+import dynamic from "next/dynamic";
+
+const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
 
 interface PreviewGeneratedTextProps {
   text: string;

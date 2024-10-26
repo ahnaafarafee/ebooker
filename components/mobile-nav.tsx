@@ -1,10 +1,10 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { SignedIn, SignedOut, SignOutButton } from "@clerk/nextjs";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ModeToggle from "./theme-controller";
-import { SignedIn, SignedOut, SignOutButton, UserButton } from "@clerk/nextjs";
 
 const MobileNav = ({
   navLinks,
