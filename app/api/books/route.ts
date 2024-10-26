@@ -37,3 +37,21 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json(book, { status: 201 });
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return NextResponse.json("Unauthorized", { status: 401 });
+  }
+
+  await prisma.book.delete({
+    where: {
+      id: params.id,
+    },
+  });
+  return NextResponse.json("Deleted Successfully", { status: 200 });
+}
