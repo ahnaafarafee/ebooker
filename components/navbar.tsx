@@ -12,11 +12,15 @@ import Spinner from "./spinner";
 
 const navLinks = [
   {
-    name: "dashboard",
+    name: "Home",
+    href: "/",
+  },
+  {
+    name: "Dashboard",
     href: "/dashboard",
   },
   {
-    name: "create",
+    name: "Create",
     href: "/create",
   },
 ];
