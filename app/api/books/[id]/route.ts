@@ -6,16 +6,22 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const { userId } = auth();
+  try {
+    const { userId } = auth();
 
-  if (!userId) {
-    return NextResponse.json("Unauthorized", { status: 401 });
+    if (!userId) {
+      return NextResponse.json("Unauthorized", { status: 401 });
+    }
+
+    await prisma.book.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    return NextResponse.json("Deleted Successfully", { status: 200 });
+  } catch (error) {
+    console.error("Error deleting book:", error);
+    return NextResponse.json("Error deleting book", { status: 500 });
   }
-
-  await prisma.book.delete({
-    where: {
-      id: params.id,
-    },
-  });
-  return NextResponse.json("Deleted Successfully", { status: 200 });
 }
